@@ -23,6 +23,7 @@ public class Atd_classe implements Runnable {
 	public Dimension taille_fenetre = new Dimension(600, 600);
 	Points points;
 	Kppv kppv;
+	Prototypes prototypes;
 	JComboBox nb_kppv;
 	JComboBox nb_proto;
 
@@ -38,6 +39,8 @@ public class Atd_classe implements Runnable {
 		mon_dessin.setBounds(0, 100, taille_fenetre.width, taille_fenetre.height - 200);
 
 		kppv = new Kppv(points, mon_dessin);
+		prototypes = new Prototypes(points, mon_dessin);
+		
 
 		menuHaut = new JPanel();
 		menuAlgo = new JPanel();
@@ -80,6 +83,7 @@ public class Atd_classe implements Runnable {
 		});
 		bPrototypes.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				prototypes.afficherSolution(nb_proto.getSelectedIndex()+1);
 			}
 		});
 		recommencer.addActionListener(new ActionListener() {

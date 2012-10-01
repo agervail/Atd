@@ -77,11 +77,12 @@ class AireDeDessin extends JComponent {
 	}
 
 	public void dessiner_point(Point p, int classe) {
-		if (classe == 1) {
+		if (classe == 1 || classe == 10) {
 			dessinable.setPaint(Color.red);
 		}
-		if (classe == 2) {
+		if (classe == 2 || classe == 20) {
 			dessinable.setPaint(Color.yellow);
+			System.out.println("allo ?");
 		}
 		if (classe == 3) {
 			dessiner_tout();
@@ -91,6 +92,13 @@ class AireDeDessin extends JComponent {
 			dessinable.fillOval(p.x - 10, p.y - 10, 20, 20);
 			dessinable.setPaint(Color.black);
 			dessinable.drawOval(p.x - 10, p.y - 10, 20, 20);
+		}
+		if (classe == 10 || classe == 20) {
+			dessinable.fillOval(p.x - 5, p.y - 5, 10, 10);
+			dessinable.setPaint(Color.black);
+			dessinable.drawLine(p.x-3, p.y-3, p.x+3, p.y+3);
+			dessinable.drawLine(p.x+3, p.y+3, p.x-3, p.y-3);
+			dessinable.drawOval(p.x - 5, p.y - 5, 10, 10);
 		}
 	}
 
@@ -128,8 +136,8 @@ class AireDeDessin extends JComponent {
 		int r = 10;
 		for (Point p : ppvMaj) {
 			teta1 = teta(p, o);
-			teta2 = teta1+Math.PI;
-			
+			teta2 = teta1 + Math.PI;
+
 			int[] arrayX = {p.x, p.x + (int) (r * Math.cos(teta1 - aOuv)), o.x + (int) (r * Math.cos(teta2 + aOuv)), o.x, o.x + (int) (r * Math.cos(teta2 - aOuv)), p.x + (int) (r * Math.cos(teta1 + aOuv))};
 			int[] arrayY = {p.y, p.y + (int) (r * Math.sin(teta1 - aOuv)), o.y + (int) (r * Math.sin(teta2 + aOuv)), o.y, o.y + (int) (r * Math.sin(teta2 - aOuv)), p.y + (int) (r * Math.sin(teta1 + aOuv))};
 
@@ -139,7 +147,7 @@ class AireDeDessin extends JComponent {
 		aOuv = 0.3;
 		for (Point p : ppvMin) {
 			teta1 = teta(p, o);
-			teta2 = teta1+Math.PI;
+			teta2 = teta1 + Math.PI;
 
 			int[] arrayX = {p.x, p.x + (int) (r * Math.cos(teta1 - aOuv)), o.x + (int) (r * Math.cos(teta2 + aOuv)), o.x, o.x + (int) (r * Math.cos(teta2 - aOuv)), p.x + (int) (r * Math.cos(teta1 + aOuv))};
 			int[] arrayY = {p.y, p.y + (int) (r * Math.sin(teta1 - aOuv)), o.y + (int) (r * Math.sin(teta2 + aOuv)), o.y, o.y + (int) (r * Math.sin(teta2 - aOuv)), p.y + (int) (r * Math.sin(teta1 + aOuv))};
@@ -147,6 +155,22 @@ class AireDeDessin extends JComponent {
 			dessinable.setPaint(Color.pink);
 			dessinable.fillPolygon(arrayX, arrayY, 6);
 		}
+	}
+
+	public void dessinerPrototypes(ArrayList<Point> protosA, ArrayList<Point> protosB) {
+		dessiner_tout();
+
+		int r = 10;
+		System.out.println("je dessine");
+		for (Point p : protosA) {
+			dessiner_point(p, 10);
+			System.out.println("1");
+		}
+		for (Point p : protosB) {
+			dessiner_point(p, 20);
+			System.out.println("2");
+		}
+
 	}
 
 	public void dessinerRectEntreDeuxPoints(Point a, Point b, int eppaisseur) {
@@ -162,22 +186,22 @@ class AireDeDessin extends JComponent {
 		double y = b.y - a.y;
 		double teta = 0;
 		/*if (x > 0) {
-			if (y >= 0) {
-				teta = Math.atan(y / x);
-			} else { //y<0
-				teta = Math.atan(y / x) + Math.PI * 2;
-			}
-		} else if (x == 0) {
-			if (y > 0) {
-				teta = Math.PI / 2;
-			}
-			if (y < 0) {
-				teta = Math.PI * 3 / 2;
-			}
-		} else { //x < 0
-			teta = Math.atan(y / x) + Math.PI;
-		}*/
-		teta = 2 * Math.atan(y/(x+distance(a,b)));
+		 if (y >= 0) {
+		 teta = Math.atan(y / x);
+		 } else { //y<0
+		 teta = Math.atan(y / x) + Math.PI * 2;
+		 }
+		 } else if (x == 0) {
+		 if (y > 0) {
+		 teta = Math.PI / 2;
+		 }
+		 if (y < 0) {
+		 teta = Math.PI * 3 / 2;
+		 }
+		 } else { //x < 0
+		 teta = Math.atan(y / x) + Math.PI;
+		 }*/
+		teta = 2 * Math.atan(y / (x + distance(a, b)));
 		return teta;
 	}
 
