@@ -16,27 +16,32 @@ public class Prototypes {
 
 	Points points;
 	AireDeDessin aire;
-	Point pointX;
-	ArrayList<Point> protosA = new ArrayList<Point>();
-	ArrayList<Point> protosB = new ArrayList<Point>();
-
+	ArrayList<Point> protosA;
+	ArrayList<Point> protosB;
+	
 	public Prototypes(Points points, AireDeDessin aire) {
 		this.points = points;
 		this.aire = aire;
-		pointX = points.pointX;
 	}
 
 	public void afficherSolution(int nb_proto) {
-		Point proto;
+		Point proto; 
+		protosA = new ArrayList<Point>();
+		protosB = new ArrayList<Point>();
 		creationPrototypes(nb_proto);
 		proto = meilleurPrototype();
 		
 		aire.dessinerPrototypes(protosA, protosB);
+		if(protosA.contains(proto)){
+		aire.dessinerMeilleurPrototype(proto,1);
+		}else{
+		aire.dessinerMeilleurPrototype(proto,2);
+		}
 		aire.repaint();
 	}
 
 	public Point meilleurPrototype() {
-		Point meilleurProto = prototypePlusProche(protosA, protosB, pointX);
+		Point meilleurProto = prototypePlusProche2(protosA, protosB, points.pointX);
 		return meilleurProto;
 	}
 
@@ -55,15 +60,14 @@ public class Prototypes {
 			protosB.add(pointsB.get(alea.nextInt(tailleB)));
 		}
 
-		System.out.println(protosA);
-		System.out.println(protosB);
 		//Ajustement des prototypes
 		int choix = 0;
 		int classePointChoisi;
 		Point pointChoisi;
 		Point protoProche;
 		double sigma = 0.25;
-		for (int i = 0; i < nb_proto * 100; i++) {
+		int nbIterations = 100;
+		for (int i = 0; i < nb_proto * nbIterations; i++) {
 			choix = alea.nextInt(tailleA + tailleB);
 			if (choix < tailleA) {
 				pointChoisi = pointsA.get(choix);
@@ -73,7 +77,7 @@ public class Prototypes {
 				classePointChoisi = 2;
 			}
 
-			protoProche = prototypePlusProche(protosA, protosB, pointX);
+			protoProche = prototypePlusProche(protosA, protosB, pointChoisi);
 			int indexDansA = protosA.indexOf(protoProche);
 			int indexDansB = protosB.indexOf(protoProche);
 			int classeProtoProche;
@@ -96,24 +100,55 @@ public class Prototypes {
 			} else {
 				protosB.set(indexDansB, newPosProto);
 			}
-			sigma *= 0.99;
+			sigma *= 0.995;
 		}
 
 	}
-
 	public Point prototypePlusProche(ArrayList<Point> protosA, ArrayList<Point> protosB, Point p) {
 		double distanceMini = Double.MAX_VALUE;
 		Point protoProche = new Point();
 
-		for (Point protoC : protosA) {
-			if (distance(protoC, p) < distanceMini) {
-				protoProche = protoC;
+		for (Point protoC1 : protosA) {
+			if (distance(protoC1, p) < distanceMini) {
+				protoProche = protoC1;
+				distanceMini = distance(protoC1, p);
 			}
 		}
-		for (Point protoC : protosB) {
-			if (distance(protoC, p) < distanceMini) {
-				protoProche = protoC;
+		for (Point protoC2 : protosB) {
+			if (distance(protoC2, p) < distanceMini) {
+				protoProche = protoC2;
+				distanceMini = distance(protoC2, p);
 			}
+		}
+
+		return protoProche;
+	}
+	public Point prototypePlusProche2(ArrayList<Point> protosA, ArrayList<Point> protosB, Point p) {
+		double distanceMini = Double.MAX_VALUE;
+		Point protoProche = new Point();
+		
+		System.out.println("A :"+protosA);
+		System.out.println("B :"+protosB);
+		System.out.println("X :"+p);
+		System.out.println("Q :"+points.pointX);
+		
+		for (Point protoC1 : protosA) {
+			if (distance(protoC1, p) < distanceMini) {
+				protoProche = protoC1;
+				distanceMini = distance(protoC1, p);
+			}
+		}
+		for (Point protoC2 : protosB) {
+			if (distance(protoC2, p) < distanceMini) {
+				protoProche = protoC2;
+				distanceMini = distance(protoC2, p);
+			}
+		}
+		if(protosA.contains(protoProche)){
+			System.out.println("				---> A");
+		}
+		if(protosB.contains(protoProche)){
+			System.out.println("				---> B");
 		}
 		return protoProche;
 	}

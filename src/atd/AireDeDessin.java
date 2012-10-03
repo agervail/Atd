@@ -82,7 +82,7 @@ class AireDeDessin extends JComponent {
 		}
 		if (classe == 2 || classe == 20) {
 			dessinable.setPaint(Color.yellow);
-			System.out.println("allo ?");
+			//System.out.println("allo ?");
 		}
 		if (classe == 3) {
 			dessiner_tout();
@@ -95,10 +95,12 @@ class AireDeDessin extends JComponent {
 		}
 		if (classe == 10 || classe == 20) {
 			dessinable.fillOval(p.x - 5, p.y - 5, 10, 10);
+			dessinable.setPaint(Color.green);
+			dessinable.drawLine(p.x - 3, p.y - 3, p.x + 3, p.y + 3);
+			dessinable.drawLine(p.x + 3, p.y - 3, p.x - 3, p.y + 3);
 			dessinable.setPaint(Color.black);
-			dessinable.drawLine(p.x-3, p.y-3, p.x+3, p.y+3);
-			dessinable.drawLine(p.x+3, p.y+3, p.x-3, p.y-3);
 			dessinable.drawOval(p.x - 5, p.y - 5, 10, 10);
+			dessinable.drawOval(p.x - 6, p.y - 6, 12, 12);
 		}
 	}
 
@@ -155,22 +157,54 @@ class AireDeDessin extends JComponent {
 			dessinable.setPaint(Color.pink);
 			dessinable.fillPolygon(arrayX, arrayY, 6);
 		}
+		dessinable.setPaint(Color.blue);
+		dessinable.fillOval(points.pointX.x - 10, points.pointX.y - 10, 20, 20);
+		dessinable.setPaint(Color.black);
+		dessinable.drawOval(points.pointX.x - 10, points.pointX.y - 10, 20, 20);
+		if (points.pointsA.contains(ppvMaj.get(0))) {
+			dessinable.setPaint(Color.red);
+		} else {
+			dessinable.setPaint(Color.yellow);
+		}
+		dessinable.fillOval(points.pointX.x - 5, points.pointX.y - 5, 10, 10);
 	}
 
 	public void dessinerPrototypes(ArrayList<Point> protosA, ArrayList<Point> protosB) {
 		dessiner_tout();
-
 		int r = 10;
-		System.out.println("je dessine");
 		for (Point p : protosA) {
 			dessiner_point(p, 10);
-			System.out.println("1");
 		}
 		for (Point p : protosB) {
 			dessiner_point(p, 20);
-			System.out.println("2");
 		}
+	}
 
+	public void dessinerMeilleurPrototype(Point best, int classeBest) {
+		Double teta1;
+		Double teta2;
+		Point o = points.pointX;
+		Double aOuv = 0.3;
+		int r = 5;
+		teta1 = teta(best, o);
+		teta2 = teta1 + Math.PI;
+
+		int[] arrayX = {best.x, best.x + (int) (r * Math.cos(teta1 - aOuv)), o.x + (int) (r * Math.cos(teta2 + aOuv)), o.x, o.x + (int) (r * Math.cos(teta2 - aOuv)), best.x + (int) (r * Math.cos(teta1 + aOuv))};
+		int[] arrayY = {best.y, best.y + (int) (r * Math.sin(teta1 - aOuv)), o.y + (int) (r * Math.sin(teta2 + aOuv)), o.y, o.y + (int) (r * Math.sin(teta2 - aOuv)), best.y + (int) (r * Math.sin(teta1 + aOuv))};
+
+		dessinable.setPaint(Color.orange);
+		dessinable.fillPolygon(arrayX, arrayY, 6);
+
+		dessinable.setPaint(Color.blue);
+		dessinable.fillOval(points.pointX.x - 10, points.pointX.y - 10, 20, 20);
+		dessinable.setPaint(Color.black);
+		dessinable.drawOval(points.pointX.x - 10, points.pointX.y - 10, 20, 20);
+		if (classeBest == 1) {
+			dessinable.setPaint(Color.red);
+		} else {
+			dessinable.setPaint(Color.yellow);
+		}
+		dessinable.fillOval(points.pointX.x - 5, points.pointX.y - 5, 10, 10);
 	}
 
 	public void dessinerRectEntreDeuxPoints(Point a, Point b, int eppaisseur) {
@@ -185,22 +219,6 @@ class AireDeDessin extends JComponent {
 		double x = b.x - a.x;
 		double y = b.y - a.y;
 		double teta = 0;
-		/*if (x > 0) {
-		 if (y >= 0) {
-		 teta = Math.atan(y / x);
-		 } else { //y<0
-		 teta = Math.atan(y / x) + Math.PI * 2;
-		 }
-		 } else if (x == 0) {
-		 if (y > 0) {
-		 teta = Math.PI / 2;
-		 }
-		 if (y < 0) {
-		 teta = Math.PI * 3 / 2;
-		 }
-		 } else { //x < 0
-		 teta = Math.atan(y / x) + Math.PI;
-		 }*/
 		teta = 2 * Math.atan(y / (x + distance(a, b)));
 		return teta;
 	}
